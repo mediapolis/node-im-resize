@@ -231,6 +231,31 @@ describe('resize.cmd()', function () {
   });
 
   it('returns convert command', function () {
+    var cmd = resize.cmd(image, output);
+    assert.equal(cmd, [
+      // original image
+      'convert ./assets/horizontal.jpg',
+      '-auto-orient',
+      '-strip',
+      '-write mpr:./assets/horizontal.jpg +delete',
+
+      // version[0]
+      'mpr:./assets/horizontal.jpg',
+      '-quality 80',
+      '-resize "1920x1920"',
+      '-write assets/horizontal-full.jpg +delete',
+
+      // version[1]
+      'mpr:./assets/horizontal.jpg',
+      '-quality 80',
+      '-crop "3936x2623+624+0"',
+      '-resize "1200x1200"',
+      'assets/horizontal-1200.jpg'
+    ].join(' '));
+  });
+
+
+  it('returns convert command w/quiet option', function () {
     var cmd = resize.cmd(image, output, {
       'quiet': true
     });
@@ -255,6 +280,7 @@ describe('resize.cmd()', function () {
       '-resize "1200x1200"',
       'assets/horizontal-1200.jpg'
     ].join(' '));
+
   });
 });
 
