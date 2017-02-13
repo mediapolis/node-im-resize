@@ -6,8 +6,13 @@ var extname = require('path').extname;
 var join = require('path').join;
 var sprintf = require('util').format;
 
-module.exports = function (image, output, cb) {
-  var cmd = module.exports.cmd(image, output);
+module.exports = function (image, output, opts, cb) {
+  if (!cb) {
+    cb = opts;
+    opts = {};
+  }
+
+  var cmd = module.exports.cmd(image, opts, output);
   exec(cmd, {
     timeout: 30000
   }, function (e, stdout, stderr) {
@@ -123,10 +128,13 @@ module.exports.path = function (src, opts) {
  *
  * @return string convert command
  */
-module.exports.cmd = function (image, output) {
+module.exports.cmd = function (image, opts, output) {
+
+  var quiet = opts.quiet ? '-quiet ' : '';
+
   var cmd = [
     sprintf(
-      'convert %s -auto-orient -quiet -strip -write mpr:%s +delete', image.path, image.path
+      'convert %s -auto-orient %s -strip -write mpr:%s +delete', image.path, quiet image.path
     )
   ];
 
