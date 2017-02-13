@@ -6,11 +6,17 @@ var extname = require('path').extname;
 var join = require('path').join;
 var sprintf = require('util').format;
 
-module.exports = function(image, output, cb) {
+module.exports = function (image, output, cb) {
   var cmd = module.exports.cmd(image, output);
-  exec(cmd, {timeout: 30000}, function(e, stdout, stderr) {
-    if (e) { return cb(e); }
-    if (stderr) { return cb(new Error(stderr)); }
+  exec(cmd, {
+    timeout: 30000
+  }, function (e, stdout, stderr) {
+    if (e) {
+      return cb(e);
+    }
+    if (stderr) {
+      return cb(new Error(stderr));
+    }
 
     return cb(null, output.versions);
   });
@@ -27,17 +33,26 @@ module.exports = function(image, output, cb) {
  *  - number width    - image version height
  *  - number height   - image version width
  */
-module.exports.crop = function(image, ratio) {
+module.exports.crop = function (image, ratio) {
   if (!ratio) {
-    return { geometry: null, width: image.width, height: image.height };
+    return {
+      geometry: null,
+      width: image.width,
+      height: image.height
+    };
   }
 
   var g = aspect.crop(image.width, image.height, ratio);
 
   // Check if the image already has the decired aspectratio.
   if (g[0] === 0 && g[1] === 0) {
-    return { geometry: null, width: image.width, height: image.height };
-  } else {
+    return {
+      geometry: null,
+      width: image.width,
+      height: image.height
+    };
+  }
+  else {
     return {
       geometry: sprintf('%dx%d+%d+%d', g[2], g[3], g[0], g[1]),
       width: g[2],
@@ -54,23 +69,26 @@ module.exports.crop = function(image, ratio) {
  *
  * @return string geometry; null if no resize applies
  */
-module.exports.resize = function(crop, version) {
+module.exports.resize = function (crop, version) {
   var maxW = version.maxWidth;
   var maxH = version.maxHeight;
 
   var resize = aspect.resize(crop.width, crop.height, maxW, maxH);
 
   // Update version object
-  version.width  = resize[0];
+  version.width = resize[0];
   version.height = resize[1];
 
   if (maxW && maxH) {
     return maxW + 'x' + maxH;
-  } else if (maxW) {
+  }
+  else if (maxW) {
     return '' + maxW;
-  } else if (maxH) {
+  }
+  else if (maxH) {
     return 'x' + maxH;
-  } else {
+  }
+  else {
     return null;
   }
 };
@@ -85,7 +103,7 @@ module.exports.resize = function(crop, version) {
  *
  * @return string path
  */
-module.exports.path = function(src, opts) {
+module.exports.path = function (src, opts) {
   var dir = opts.path || dirname(src);
   var ext = extname(src);
   var base = basename(src, ext);
@@ -105,16 +123,16 @@ module.exports.path = function(src, opts) {
  *
  * @return string convert command
  */
-module.exports.cmd = function(image, output) {
+module.exports.cmd = function (image, output) {
   var cmd = [
     sprintf(
-      'convert %s -auto-orient -strip -write mpr:%s +delete', image.path, image.path
+      'convert %s -auto-orient -quiet -strip -write mpr:%s +delete', image.path, image.path
     )
   ];
 
   for (var i = 0; i < output.versions.length; i++) {
     var version = output.versions[i];
-    var last = (i === output.versions.length-1);
+    var last = (i === output.versions.length - 1);
 
     version.quality = version.quality || output.quality || 80;
 
@@ -140,7 +158,7 @@ module.exports.cmd = function(image, output) {
  *
  * @return string version convert command
  */
-module.exports.cmdVersion = function(image, version, last) {
+module.exports.cmdVersion = function (image, version, last) {
   var cmd = [];
 
   // http://www.imagemagick.org/Usage/files/#mpr
@@ -177,7 +195,8 @@ module.exports.cmdVersion = function(image, version, last) {
   // -write
   if (last) {
     cmd.push(version.path);
-  } else {
+  }
+  else {
     cmd.push(sprintf('-write %s +delete', version.path));
   }
 
