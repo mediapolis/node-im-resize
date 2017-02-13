@@ -12,7 +12,7 @@ module.exports = function (image, output, opts, cb) {
     opts = {};
   }
 
-  var cmd = module.exports.cmd(image, opts, output);
+  var cmd = module.exports.cmd(image, output, opts);
   exec(cmd, {
     timeout: 30000
   }, function (e, stdout, stderr) {
@@ -128,7 +128,7 @@ module.exports.path = function (src, opts) {
  *
  * @return string convert command
  */
-module.exports.cmd = function (image, opts, output) {
+module.exports.cmd = function (image, output, opts) {
 
   var quiet = opts.quiet ? '-quiet ' : '';
 
