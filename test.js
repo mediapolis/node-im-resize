@@ -5,14 +5,17 @@ var crypto = require('crypto');
 var fs = require('fs');
 var resize = require('./index');
 
-describe('resize.path()', function() {
-  it('returns new relative path with suffix', function() {
-    var path = resize.path('./foo.jpg', {prefix: '', suffix: '-bar'});
+describe('resize.path()', function () {
+  it('returns new relative path with suffix', function () {
+    var path = resize.path('./foo.jpg', {
+      prefix: '',
+      suffix: '-bar'
+    });
 
     assert.equal(path, 'foo-bar.jpg');
   });
 
-  it('returns new relative path with custom format', function() {
+  it('returns new relative path with custom format', function () {
     var path = resize.path('./foo.jpg', {
       prefix: '',
       suffix: '-bar',
@@ -22,12 +25,15 @@ describe('resize.path()', function() {
     assert.equal(path, 'foo-bar.png');
   });
 
-  it('returns new absolute path with suffix', function() {
-    var path = resize.path('/foo/bar/baz.jpg', {prefix: '', suffix: '-bix'});
+  it('returns new absolute path with suffix', function () {
+    var path = resize.path('/foo/bar/baz.jpg', {
+      prefix: '',
+      suffix: '-bix'
+    });
     assert.equal(path, '/foo/bar/baz-bix.jpg');
   });
 
-  it('returns new absolute path with custom format', function() {
+  it('returns new absolute path with custom format', function () {
     var path = resize.path('/foo/bar/baz.jpg', {
       prefix: '',
       suffix: '-bix',
@@ -37,12 +43,15 @@ describe('resize.path()', function() {
     assert.equal(path, '/foo/bar/baz-bix.png');
   });
 
-  it('returns new path with prefix', function() {
-    var path = resize.path('/foo/bar/baz.jpg', {prefix: 'prefix-', suffix: ''});
+  it('returns new path with prefix', function () {
+    var path = resize.path('/foo/bar/baz.jpg', {
+      prefix: 'prefix-',
+      suffix: ''
+    });
     assert.equal(path, '/foo/bar/prefix-baz.jpg');
   });
 
-  it('returns new path with custom directory', function() {
+  it('returns new path with custom directory', function () {
     var path = resize.path('/foo/bar/baz.jpg', {
       prefix: 'im-',
       suffix: '',
@@ -53,9 +62,12 @@ describe('resize.path()', function() {
   });
 });
 
-describe('resize.crop()', function() {
-  it('returns crop geometry for horisontal image', function() {
-    var image = {width: 5184, height: 2623};
+describe('resize.crop()', function () {
+  it('returns crop geometry for horisontal image', function () {
+    var image = {
+      width: 5184,
+      height: 2623
+    };
     var crop = resize.crop(image, '3:2');
 
     assert.equal(crop.geometry, '3936x2623+624+0');
@@ -63,8 +75,11 @@ describe('resize.crop()', function() {
     assert.equal(crop.height, '2623');
   });
 
-  it('returns crop geometry for vertical image', function() {
-    var image = {height: 5184, width: 2623};
+  it('returns crop geometry for vertical image', function () {
+    var image = {
+      height: 5184,
+      width: 2623
+    };
     var crop = resize.crop(image, '3:2!v');
 
     assert.equal(crop.geometry, '2623x3936+0+624');
@@ -72,8 +87,11 @@ describe('resize.crop()', function() {
     assert.equal(crop.height, '3936');
   });
 
-  it('returns no crop for image with correct aspectratio', function() {
-    var image = {width: 2000, height: 1000};
+  it('returns no crop for image with correct aspectratio', function () {
+    var image = {
+      width: 2000,
+      height: 1000
+    };
     var crop = resize.crop(image, '2:1');
 
     assert.equal(crop.geometry, null);
@@ -81,8 +99,11 @@ describe('resize.crop()', function() {
     assert.equal(crop.height, image.height);
   });
 
-  it('returns no crop if no aspectratio is defined', function() {
-    var image = {width: 2000, height: 1000};
+  it('returns no crop if no aspectratio is defined', function () {
+    var image = {
+      width: 2000,
+      height: 1000
+    };
     var crop = resize.crop(image);
 
     assert.equal(crop.geometry, null);
@@ -91,39 +112,52 @@ describe('resize.crop()', function() {
   });
 });
 
-describe('resize.resize()', function() {
-  var crop = { width: 800, height: 533 };
+describe('resize.resize()', function () {
+  var crop = {
+    width: 800,
+    height: 533
+  };
 
-  it('returns null for no maxWidth or maxHeight', function() {
-    var version  = {};
+  it('returns null for no maxWidth or maxHeight', function () {
+    var version = {};
     var geometry = resize.resize(crop, version);
 
     assert.equal(geometry, null);
   });
 
-  it('returns geometry for only maxWidth', function() {
-    var version  = { maxWidth: 500 };
+  it('returns geometry for only maxWidth', function () {
+    var version = {
+      maxWidth: 500
+    };
     var geometry = resize.resize(crop, version);
 
     assert.equal(geometry, '500');
   });
 
-  it('returns geometry for only maxHeight', function() {
-    var version  = { maxHeight: 500 };
+  it('returns geometry for only maxHeight', function () {
+    var version = {
+      maxHeight: 500
+    };
     var geometry = resize.resize(crop, version);
 
     assert.equal(geometry, 'x500');
   });
 
-  it('returns geometry for maxWidth and maxHeight', function() {
-    var version  = { maxWidth: 500, maxHeight: 500 };
+  it('returns geometry for maxWidth and maxHeight', function () {
+    var version = {
+      maxWidth: 500,
+      maxHeight: 500
+    };
     var geometry = resize.resize(crop, version);
 
     assert.equal(geometry, '500x500');
   });
 
-  it('sets width and height on version object', function() {
-    var version  = { maxWidth: 500, maxHeight: 500 };
+  it('sets width and height on version object', function () {
+    var version = {
+      maxWidth: 500,
+      maxHeight: 500
+    };
     var geometry = resize.resize(crop, version);
 
     assert.equal(version.width, 500);
@@ -131,10 +165,10 @@ describe('resize.resize()', function() {
   });
 });
 
-describe('resize.cmd()', function() {
+describe('resize.cmd()', function () {
   var output, image;
 
-  beforeEach(function() {
+  beforeEach(function () {
     image = {
       path: './assets/horizontal.jpg',
       width: 5184,
@@ -146,7 +180,7 @@ describe('resize.cmd()', function() {
         suffix: '-full',
         maxHeight: 1920,
         maxWidth: 1920
-      },{
+      }, {
         suffix: '-1200',
         maxHeight: 1200,
         maxWidth: 1200,
@@ -155,7 +189,7 @@ describe('resize.cmd()', function() {
     };
   });
 
-  it('sets global path to each version', function() {
+  it('sets global path to each version', function () {
     output.path = '/tmp';
     resize.cmd(image, output);
 
@@ -163,7 +197,7 @@ describe('resize.cmd()', function() {
     assert.equal(output.versions[1].path, '/tmp/horizontal-1200.jpg');
   });
 
-  it('sets global prefix to each version', function() {
+  it('sets global prefix to each version', function () {
     output.prefix = 'im-';
     resize.cmd(image, output);
 
@@ -171,14 +205,14 @@ describe('resize.cmd()', function() {
     assert.equal(output.versions[1].path, 'assets/im-horizontal-1200.jpg');
   });
 
-  it('sets default quality to each version', function() {
+  it('sets default quality to each version', function () {
     resize.cmd(image, output);
 
     assert.equal(output.versions[0].quality, 80);
     assert.equal(output.versions[1].quality, 80);
   });
 
-  it('sets global quality to each version', function() {
+  it('sets global quality to each version', function () {
     output.quality = 20;
     resize.cmd(image, output);
 
@@ -186,7 +220,7 @@ describe('resize.cmd()', function() {
     assert.equal(output.versions[1].quality, 20);
   });
 
-  it('preserves local version quality', function() {
+  it('preserves local version quality', function () {
     output.quality = 30;
     output.versions[1].quality = 99;
 
@@ -196,12 +230,15 @@ describe('resize.cmd()', function() {
     assert.equal(output.versions[1].quality, 99);
   });
 
-  it('returns convert command', function() {
-    var cmd = resize.cmd(image, output);
+  it('returns convert command', function () {
+    var cmd = resize.cmd(image, output, {
+      'quiet': true
+    });
     assert.equal(cmd, [
       // original image
       'convert ./assets/horizontal.jpg',
       '-auto-orient',
+      '-quiet',
       '-strip',
       '-write mpr:./assets/horizontal.jpg +delete',
 
@@ -221,10 +258,10 @@ describe('resize.cmd()', function() {
   });
 });
 
-describe('resize.cmdVersion()', function() {
+describe('resize.cmdVersion()', function () {
   var image, version;
 
-  beforeEach(function() {
+  beforeEach(function () {
     image = {
       path: './a.jpg',
       width: 2000,
@@ -238,21 +275,21 @@ describe('resize.cmdVersion()', function() {
     };
   });
 
-  it('returns convert command for version', function() {
+  it('returns convert command for version', function () {
     var cmd = resize.cmdVersion(image, version);
     var out = 'mpr:./a.jpg -resize "500x500" -write a-b.jpg +delete';
 
     assert.equal(cmd, out);
   });
 
-  it('returns convert command for last version', function() {
+  it('returns convert command for last version', function () {
     var cmd = resize.cmdVersion(image, version, true);
     var out = 'mpr:./a.jpg -resize "500x500" a-b.jpg';
 
     assert.equal(cmd, out);
   });
 
-  it('sets quality if specified', function() {
+  it('sets quality if specified', function () {
     version.quality = 50;
 
     var cmd = resize.cmdVersion(image, version);
@@ -261,7 +298,7 @@ describe('resize.cmdVersion()', function() {
     assert.equal(cmd, out);
   });
 
-  it('sets crop if aspect ratio is defined', function() {
+  it('sets crop if aspect ratio is defined', function () {
     version.aspect = '4:3';
 
     var cmd = resize.cmdVersion(image, version);
@@ -277,56 +314,56 @@ describe('resize.cmdVersion()', function() {
   });
 });
 
-describe('resize()', function() {
+describe('resize()', function () {
   var output;
 
-  beforeEach(function() {
+  beforeEach(function () {
     output = {
       versions: [{
         suffix: '-full',
         maxHeight: 1920,
         maxWidth: 1920
-      },{
+      }, {
         suffix: '-1200',
         maxHeight: 1200,
         maxWidth: 1200,
         aspect: "3:2"
-      },{
+      }, {
         suffix: '-800',
         maxHeight: 800,
         maxWidth: 800,
         aspect: "3:2"
-      },{
+      }, {
         suffix: '-500',
         maxHeight: 500,
         maxWidth: 500,
         aspect: "3:2"
-      },{
+      }, {
         suffix: '-260',
         maxHeight: 260,
         maxWidth: 260,
         aspect: "3:2"
-      },{
+      }, {
         suffix: '-150',
         maxHeight: 150,
         maxWidth: 150,
         aspect: "3:2"
-      },{
+      }, {
         suffix: '-horizontal-500',
         maxHeight: 500,
         maxWidth: 500,
         aspect: "3:2!h",
-      },{
+      }, {
         suffix: '-vertical-500',
         maxHeight: 500,
         maxWidth: 500,
         aspect: "3:2!v",
-      },{
+      }, {
         suffix: '-square-200',
         maxHeight: 200,
         maxWidth: 200,
         aspect: "1:1"
-      },{
+      }, {
         suffix: '-square-50',
         maxHeight: 50,
         maxWidth: 50,
@@ -335,7 +372,7 @@ describe('resize()', function() {
     };
   });
 
-  it('resisizes horizontal image', function(done) {
+  it('resisizes horizontal image', function (done) {
     this.timeout(5000);
 
     var image = {
@@ -397,11 +434,11 @@ describe('resize()', function() {
       },
     };
 
-    resize(image, output, function(err, versions) {
+    resize(image, output, function (err, versions) {
       assert.ifError(err);
       assert(versions instanceof Array);
 
-      for(var i = 0; i < versions.length; i++) {
+      for (var i = 0; i < versions.length; i++) {
         var file = fs.readFileSync(versions[i].path);
         var sha1 = crypto.createHash('sha1').update(file).digest('hex');
 
@@ -414,13 +451,13 @@ describe('resize()', function() {
     });
   });
 
-  it('resisizes vertical image', function(done) {
+  it('resisizes vertical image', function (done) {
     this.timeout(5000);
 
     var image = {
       path: './assets/vertical.jpg',
       width: 2448,
-      height:3264
+      height: 3264
     };
 
     var checksum = {
@@ -435,12 +472,12 @@ describe('resize()', function() {
         height: 260
       },
       'assets/vertical-500.jpg': {
-        sha1:  '5335938e3c0599144a514a0014cdf882fc5fe975',
+        sha1: '5335938e3c0599144a514a0014cdf882fc5fe975',
         width: 333,
         height: 500
       },
       'assets/vertical-800.jpg': {
-        sha1:  '9d5c719cce45f66295e11c4853c100fba6e59b49',
+        sha1: '9d5c719cce45f66295e11c4853c100fba6e59b49',
         width: 533,
         height: 800
       },
@@ -450,7 +487,7 @@ describe('resize()', function() {
         height: 1200
       },
       'assets/vertical-full.jpg': {
-        sha1:  '654e1bce7a1f2faebd7359009c1f4614823d0148',
+        sha1: '654e1bce7a1f2faebd7359009c1f4614823d0148',
         width: 1440,
         height: 1920
       },
@@ -460,29 +497,29 @@ describe('resize()', function() {
         height: 333
       },
       'assets/vertical-square-50.jpg': {
-        sha1:  '748d2dad7f8135167db297b4f9dec480e1cd4a1a',
+        sha1: '748d2dad7f8135167db297b4f9dec480e1cd4a1a',
         width: 50,
         height: 50
       },
       'assets/vertical-square-200.jpg': {
-        sha1:  '00d8cd18a861787a02f025b81bf9a7a8ad80e377',
+        sha1: '00d8cd18a861787a02f025b81bf9a7a8ad80e377',
         width: 200,
         height: 200
       },
       'assets/vertical-vertical-500.jpg': {
-        sha1:  '5335938e3c0599144a514a0014cdf882fc5fe975',
+        sha1: '5335938e3c0599144a514a0014cdf882fc5fe975',
         width: 333,
         height: 500
       }
     };
 
-    resize(image, output, function(err, versions) {
+    resize(image, output, function (err, versions) {
       assert.ifError(err);
 
       assert(versions instanceof Array);
       assert.equal(versions.length, output.versions.length);
 
-      for(var i = 0; i < versions.length; i++) {
+      for (var i = 0; i < versions.length; i++) {
         var file = fs.readFileSync(versions[i].path);
         var sha1 = crypto.createHash('sha1').update(file).digest('hex');
 
@@ -495,7 +532,7 @@ describe('resize()', function() {
     });
   });
 
-  it('resizes transparent image', function(done) {
+  it('resizes transparent image', function (done) {
     this.timeout(5000);
 
     var image = {
@@ -563,13 +600,13 @@ describe('resize()', function() {
       }
     };
 
-    resize(image, output, function(err, versions) {
+    resize(image, output, function (err, versions) {
       assert.ifError(err);
 
       assert(versions instanceof Array);
       assert.equal(versions.length, output.versions.length);
 
-      for(var i = 0; i < versions.length; i++) {
+      for (var i = 0; i < versions.length; i++) {
         var file = fs.readFileSync(versions[i].path);
         var sha1 = crypto.createHash('sha1').update(file).digest('hex');
 
@@ -582,7 +619,7 @@ describe('resize()', function() {
     });
   });
 
-  it('scales up small image', function(done) {
+  it('scales up small image', function (done) {
     this.timeout(5000);
 
     var image = {
@@ -644,13 +681,13 @@ describe('resize()', function() {
       }
     };
 
-    resize(image, output, function(err, versions) {
+    resize(image, output, function (err, versions) {
       assert.ifError(err);
 
       assert(versions instanceof Array);
       assert.equal(versions.length, output.versions.length);
 
-      for(var i = 0; i < versions.length; i++) {
+      for (var i = 0; i < versions.length; i++) {
         var file = fs.readFileSync(versions[i].path);
         var sha1 = crypto.createHash('sha1').update(file).digest('hex');
 
@@ -663,7 +700,7 @@ describe('resize()', function() {
     });
   });
 
-  it('auto-rotates rotated image', function(done) {
+  it('auto-rotates rotated image', function (done) {
     this.timeout(5000);
 
     var image = {
@@ -725,13 +762,13 @@ describe('resize()', function() {
       }
     };
 
-    resize(image, output, function(err, versions) {
+    resize(image, output, function (err, versions) {
       assert.ifError(err);
 
       assert(versions instanceof Array);
       assert.equal(versions.length, output.versions.length);
 
-      for(var i = 0; i < versions.length; i++) {
+      for (var i = 0; i < versions.length; i++) {
         var file = fs.readFileSync(versions[i].path);
         var sha1 = crypto.createHash('sha1').update(file).digest('hex');
 
