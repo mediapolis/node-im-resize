@@ -14,7 +14,7 @@ module.exports = function (image, output, opts, cb) {
 
   var cmd = module.exports.cmd(image, output, opts);
   exec(cmd, {
-    timeout: 30000
+    timeout: 120000
   }, function (e, stdout, stderr) {
     if (e) {
       return cb(e);
